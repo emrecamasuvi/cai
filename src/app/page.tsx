@@ -8,7 +8,6 @@ import {
   SupportedModels,
 } from "@/components/model-dialog";
 import { Nav } from "@/components/nav";
-import { TokenDialog } from "@/components/token-dialog";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { ANCHOR_CLASS_NAME } from "@/hooks/use-markdown-processor";
 import PaperPlaneRight from "@phosphor-icons/react/dist/icons/PaperPlaneRight";
@@ -25,15 +24,13 @@ const parseError = (error: Error) => {
 };
 
 export default function Chat() {
-  const [tokenOpen, setTokenOpen] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
-  const [token, setToken] = useLocalStorage<string | null>("ai-token", null);
   const [model, setModel] = useLocalStorage<SupportedModels>(
     "ai-model",
     SUPPORTED_MODELS[0]
   );
   const { messages, input, handleInputChange, handleSubmit, error } = useChat({
-    body: { token, model },
+    body: { model },
   });
 
   return (
@@ -62,7 +59,6 @@ export default function Chat() {
                 onChange={handleInputChange}
                 aria-label="ask a question"
                 placeholder="Ask a question..."
-                disabled={!token}
               />
               <button
                 type="submit"
@@ -88,26 +84,10 @@ export default function Chat() {
                   ({model})
                 </p>
               </div>
-              <button
-                type="button"
-                className={ANCHOR_CLASS_NAME}
-                onClick={() => setTokenOpen(true)}
-              >
-                <div className="font-sans text-xs font-medium">
-                  {token ? "Change API Key" : "Set API Key"}
-                </div>
-              </button>
             </div>
           </form>
         </div>
       </div>
-      <TokenDialog
-        // Clear input between opening/closing.
-        key={tokenOpen.toString()}
-        open={tokenOpen}
-        setOpen={setTokenOpen}
-        setToken={setToken}
-      />
       <ModelDialog
         open={modelOpen}
         setOpen={setModelOpen}

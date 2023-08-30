@@ -26,9 +26,9 @@ For example:
 `;
 
 export async function POST(req: Request) {
-  const { messages, token, model = "gpt-3.5-turbo" } = await req.json();
+  const { messages, model = "gpt-3.5-turbo" } = await req.json();
 
-  const configuration = new Configuration({ apiKey: token });
+  const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
   const openai = new OpenAIApi(configuration);
 
   try {
